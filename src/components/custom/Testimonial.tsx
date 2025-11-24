@@ -53,9 +53,9 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="pt-20 pb-72 sm:py-20 px-4 sm:px-6 lg:px-8  relative overflow-hidden">
+    <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* LEFT SIDE - Enhanced Content */}
           <div
             className={`space-y-8 transition-all duration-2000 ${
@@ -102,89 +102,90 @@ export default function Testimonials() {
           </div>
 
           {/* RIGHT SIDE - Enhanced Testimonials */}
-          <div className="relative">
+          <div className="relative w-full">
             <div
-              className={`space-y-6 transition-all duration-1000 ${
+              className={`transition-all duration-1000 ${
                 isVisible
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 translate-x-8"
               }`}
             >
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={testimonial.id}
-                  className={`absolute inset-0 transition-all duration-500 ${
-                    index === activeIndex
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-8 pointer-events-none"
-                  }`}
-                >
+              <div className="relative min-h-[360px] sm:min-h-[380px]">
+                {testimonials.map((testimonial, index) => (
                   <div
-                    className={`
-                      bg-gray-900/80 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-gray-800
-                      transition-all duration-500 hover:border-[#10B981]/20
-                      ${
-                        hoveredCard === testimonial.id
-                          ? "ring-1 ring-[#10B981]/20"
-                          : ""
-                      }
-                    `}
-                    onMouseEnter={() => setHoveredCard(testimonial.id)}
-                    onMouseLeave={() => setHoveredCard(null)}
+                    key={testimonial.id}
+                    className={`absolute inset-0 transition-all duration-500 ${
+                      index === activeIndex
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-4 pointer-events-none"
+                    }`}
+                    aria-hidden={index !== activeIndex}
                   >
-                    {/* Quote icon */}
-                    <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-7 h-7 sm:w-8 sm:h-8 bg-[#10B981] rounded-full flex items-center justify-center shadow-lg">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="white"
-                        className="sm:w-4 sm:h-4"
-                      >
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-10zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                      </svg>
-                    </div>
-
-                    <div className="space-y-4 sm:space-y-6">
-                      <p className="text-gray-200 text-base sm:text-lg leading-relaxed belleza px-1">
-                        "{testimonial.message}"
-                      </p>
-
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-4">
-                        <div className="relative flex-shrink-0">
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#10B981] to-emerald-400 rounded-full blur-sm opacity-50" />
-                          <img
-                            src={testimonial.avatar}
-                            alt={`${testimonial.name}'s profile`}
-                            className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white/20"
-                          />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-[#10B981] text-lg sm:text-xl bellefair">
-                            {testimonial.name}
-                          </h3>
-                          <p className="text-gray-400 text-xs sm:text-sm belleza">
-                            SwapSkill Member
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Decorative gradient line */}
                     <div
                       className={`
-                      absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10B981] to-transparent
-                      transition-all duration-500 
-                      ${
-                        hoveredCard === testimonial.id
-                          ? "opacity-100"
-                          : "opacity-0"
-                      }
-                    `}
-                    />
+                        bg-gray-900/80 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-gray-800
+                        transition-all duration-500 hover:border-[#10B981]/20
+                        ${
+                          hoveredCard === testimonial.id
+                            ? "ring-1 ring-[#10B981]/20"
+                            : ""
+                        }
+                      `}
+                      onMouseEnter={() => setHoveredCard(testimonial.id)}
+                      onMouseLeave={() => setHoveredCard(null)}
+                    >
+                      <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-7 h-7 sm:w-8 sm:h-8 bg-[#10B981] rounded-full flex items-center justify-center shadow-lg">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="white"
+                          className="sm:w-4 sm:h-4"
+                        >
+                          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-10zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                        </svg>
+                      </div>
+
+                      <div className="space-y-4 sm:space-y-6">
+                        <p className="text-gray-200 text-base sm:text-lg leading-relaxed belleza px-1">
+                          "{testimonial.message}"
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 pt-4">
+                          <div className="relative flex-shrink-0">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#10B981] to-emerald-400 rounded-full blur-sm opacity-50" />
+                            <img
+                              src={testimonial.avatar}
+                              alt={`${testimonial.name}'s profile`}
+                              className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-white/20"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-[#10B981] text-lg sm:text-xl bellefair">
+                              {testimonial.name}
+                            </h3>
+                            <p className="text-gray-400 text-xs sm:text-sm belleza">
+                              SwapSkill Member
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`
+                        absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#10B981] to-transparent
+                        transition-all duration-500 
+                        ${
+                          hoveredCard === testimonial.id
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }
+                      `}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>

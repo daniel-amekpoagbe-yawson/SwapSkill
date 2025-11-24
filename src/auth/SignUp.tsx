@@ -18,9 +18,16 @@ import type { AuthUser } from "@/types/Types";
 import { signUpWithEmail } from "./AuthServices";
 import { signUpSchema } from "@/types/AuthSchema";
 
+// ==================== TYPE DEFINITIONS ====================
+
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-// Sign Up Form Component with Firebase Integration
+// ==================== SIGN UP FORM ====================
+
+/**
+ * SignUpForm - User registration form component
+ * Matches dark theme with proper styling
+ */
 const SignUpForm: React.FC<{
   onSwitchToLogin: () => void;
   onSignUpSuccess: (user: AuthUser) => void;
@@ -39,13 +46,17 @@ const SignUpForm: React.FC<{
     mode: "onChange",
   });
 
-  // Handle Firebase sign up
+  // ==================== HANDLERS ====================
+
+  /**
+   * Handle Supabase sign up
+   */
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true);
     setSubmitError("");
 
     try {
-      // Use Firebase Auth Service
+      // Use Supabase Auth Service
       const result = await signUpWithEmail({
         fullName: data.fullName,
         email: data.email,
@@ -55,9 +66,12 @@ const SignUpForm: React.FC<{
       if (result.success && result.user) {
         // Sign up successful
         const authUser: AuthUser = {
-          uid: result.user.uid,
+          uid: result.user.id,
           email: result.user.email ?? "",
-          displayName: result.user.displayName ?? undefined,
+          displayName:
+            result.user.user_metadata?.display_name ||
+            result.user.user_metadata?.full_name ||
+            undefined,
         };
         onSignUpSuccess(authUser);
       } else {
@@ -74,13 +88,15 @@ const SignUpForm: React.FC<{
     }
   };
 
+  // ==================== RENDER ====================
+
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-gray-900/80 backdrop-blur-xl border-gray-800 shadow-xl">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
+        <CardTitle className="text-2xl sm:text-3xl font-bold text-center text-white cinzel">
           Create Account
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-gray-400 belleza">
           Enter your information to create a new account
         </CardDescription>
       </CardHeader>
@@ -137,8 +153,8 @@ const SignUpForm: React.FC<{
 
           {/* Submit Error Alert */}
           {submitError && (
-            <Alert className="border-red-200 bg-red-50">
-              <AlertDescription className="text-red-800">
+            <Alert className="border-red-500/50 bg-red-500/10">
+              <AlertDescription className="text-red-300 belleza">
                 {submitError}
               </AlertDescription>
             </Alert>
@@ -147,7 +163,7 @@ const SignUpForm: React.FC<{
           {/* Submit Button */}
           <Button
             type="button"
-            className="w-full"
+            className="w-full bg-[#10B981] hover:bg-[#0ea371] text-white font-semibold h-11 belleza"
             disabled={!isValid || isLoading}
             onClick={handleSubmit(onSubmit)}
           >
@@ -156,12 +172,12 @@ const SignUpForm: React.FC<{
 
           {/* Switch to Login */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400 belleza">
               Already have an account?{" "}
               <button
                 type="button"
                 onClick={onSwitchToLogin}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-[#10B981] hover:text-[#0ea371] font-medium transition-colors"
               >
                 Sign in here
               </button>
@@ -172,4 +188,5 @@ const SignUpForm: React.FC<{
     </Card>
   );
 };
+
 export default SignUpForm;

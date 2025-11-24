@@ -70,7 +70,7 @@ export const HeroSection = () => {
 
   return (
     <>
-      <section className="relative flex flex-col items-center min-h-[80vh] pt-24 pb-12 px-6 sm:px-10 lg:px-16 text-left overflow-hidden bg-gradient-to-b from-black to-gray-900">
+      <section className="relative flex flex-col items-center min-h-[80vh] pt-20 pb-12 px-6 sm:px-10 lg:px-16 text-left overflow-hidden bg-gradient-to-b from-black to-gray-900">
         <GridPattern className="absolute inset-0 w-full h-full opacity-20 backdrop-opacity-20" />
 
         {/* Background Effects */}

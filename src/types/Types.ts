@@ -26,7 +26,7 @@ export type FilterState = {
   isOnline: boolean | null;
 };
 
-//=========================FIREBASE TYPE DEFINITIONS=======================//
+//=========================SUPABASE TYPE DEFINITIONS=======================//
 
 export type Skill = {
   id: string;

@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // Handle click outside drawer to close it
   useEffect(() => {
@@ -40,9 +42,9 @@ export const Navbar = () => {
   // Navigation items configuration - DRY principle
   const navItems = [
     { path: "/", label: "Home" },
-    { path: "/explore", label: "Explore Skills" },
-    { path: "/about", label: "About" },
-    { path: "/contact", label: "Contact Us" },
+    { path: "/skills", label: "Find Skills" },
+    { path: "/our-mission", label: "Our Mission" },
+    { path: "/contact", label: "Contact" },
   ];
 
   // Handle navigation and close drawer - reusable function
@@ -104,22 +106,46 @@ export const Navbar = () => {
                 ))}
               </nav>
 
-              {/* Desktop Register Button - Right Side */}
-              <div>
-                <Button
-                  size="lg"
-                  className="backdrop-blur-md bg-[#10B981]/50 border belleza border-white/20 text-white hover:bg-[#10B981]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl rounded-xl"
-                  onClick={() => navigate("/SkillListingPage")}
-                >
-                  Register
-                </Button>
-                <Button
-                  size="lg"
-                  className="backdrop-blur-md bg-[#10B981]/50 border belleza border-white/20 text-white hover:bg-[#10B981]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl rounded-xl"
-                  onClick={() => navigate("/SkillUploadForm")}
-                >
-                  Regist
-                </Button>
+              {/* Desktop Action Buttons - Right Side */}
+              <div className="flex items-center gap-3">
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      size="lg"
+                      variant="ghost"
+                      className="text-gray-100 hover:text-white hover:bg-white/10"
+                      onClick={() => navigate("/profile")}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Profile
+                    </Button>
+                    <Button
+                      size="lg"
+                      className="backdrop-blur-md bg-[#10B981]/50 border belleza border-white/20 text-white hover:bg-[#10B981]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl rounded-xl"
+                      onClick={() => navigate("/upload-skill")}
+                    >
+                      Share Skill
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      size="lg"
+                      variant="ghost"
+                      className="text-gray-100 hover:text-white hover:bg-white/10"
+                      onClick={() => navigate("/login")}
+                    >
+                      Sign In
+                    </Button>
+                    <Button
+                      size="lg"
+                      className="backdrop-blur-md bg-[#10B981]/50 border belleza border-white/20 text-white hover:bg-[#10B981]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl rounded-xl"
+                      onClick={() => navigate("/signup")}
+                    >
+                      Sign Up
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -187,19 +213,40 @@ export const Navbar = () => {
 
             {/* Drawer Footer with Action Buttons */}
             <div className="mt-auto p-6 border-t border-white/10 space-y-4 bg-white/5">
-              <Button
-                className="w-full bg-[#10B981]/50 hover:bg-[#10B981]/80 border border-white/20 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl transform hover:scale-105"
-                onClick={() => handleNavigation("/skilllistingpage")}
-              >
-                Register Now
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-300 bg-transparent rounded-xl transform hover:scale-105"
-                onClick={() => handleNavigation("/login")}
-              >
-                Sign In
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    className="w-full bg-[#10B981]/50 hover:bg-[#10B981]/80 border border-white/20 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl transform hover:scale-105"
+                    onClick={() => handleNavigation("/upload-skill")}
+                  >
+                    Share Skill
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-300 bg-transparent rounded-xl transform hover:scale-105"
+                    onClick={() => handleNavigation("/profile")}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    My Profile
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    className="w-full bg-[#10B981]/50 hover:bg-[#10B981]/80 border border-white/20 text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl rounded-xl transform hover:scale-105"
+                    onClick={() => handleNavigation("/signup")}
+                  >
+                    Sign Up
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full border-white/20 text-white hover:bg-white/10 font-medium transition-all duration-300 bg-transparent rounded-xl transform hover:scale-105"
+                    onClick={() => handleNavigation("/login")}
+                  >
+                    Sign In
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

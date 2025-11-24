@@ -4,9 +4,9 @@ import Footer from "../custom/Footer";
 
 function AppLayOut() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#101822] text-white">
       <Navbar />
-      <main className="flex grow">
+      <main className="flex grow pt-16">
         <Outlet />
       </main>
       <Footer />

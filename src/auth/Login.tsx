@@ -17,9 +17,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
+// ==================== TYPE DEFINITIONS ====================
+
 type LoginFormData = z.infer<typeof loginSchema>;
 
-// Login Form Component with Firebase Integration
+// ==================== LOGIN FORM ====================
+
+/**
+ * LoginForm - User login form component
+ * Matches dark theme with proper styling
+ */
 const LoginForm: React.FC<{
   onSwitchToSignUp: () => void;
   onLoginSuccess: (user: AuthUser) => void;
@@ -37,13 +44,17 @@ const LoginForm: React.FC<{
     mode: "onChange",
   });
 
-  // Handle Firebase login
+  // ==================== HANDLERS ====================
+
+  /**
+   * Handle Supabase login
+   */
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setSubmitError("");
 
     try {
-      // Use Firebase Auth Service
+      // Use Supabase Auth Service
       const result = await signInWithEmail({
         email: data.email,
         password: data.password,
@@ -52,9 +63,12 @@ const LoginForm: React.FC<{
       if (result.success && result.user) {
         // Login successful
         const authUser: AuthUser = {
-          uid: result.user.uid,
+          uid: result.user.id,
           email: result.user.email ?? "",
-          displayName: result.user.displayName ?? undefined,
+          displayName:
+            result.user.user_metadata?.display_name ||
+            result.user.user_metadata?.full_name ||
+            undefined,
         };
         onLoginSuccess(authUser);
       } else {
@@ -69,13 +83,15 @@ const LoginForm: React.FC<{
     }
   };
 
+  // ==================== RENDER ====================
+
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto bg-gray-900/80 backdrop-blur-xl border-gray-800 shadow-xl">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
+        <CardTitle className="text-2xl sm:text-3xl font-bold text-center text-white cinzel">
           Welcome back
         </CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-gray-400 belleza">
           Enter your credentials to access your account
         </CardDescription>
       </CardHeader>
@@ -107,8 +123,8 @@ const LoginForm: React.FC<{
 
           {/* Submit Error Alert */}
           {submitError && (
-            <Alert className="border-red-200 bg-red-50">
-              <AlertDescription className="text-red-800">
+            <Alert className="border-red-500/50 bg-red-500/10">
+              <AlertDescription className="text-red-300 belleza">
                 {submitError}
               </AlertDescription>
             </Alert>
@@ -117,7 +133,7 @@ const LoginForm: React.FC<{
           {/* Submit Button */}
           <Button
             type="button"
-            className="w-full"
+            className="w-full bg-[#10B981] hover:bg-[#0ea371] text-white font-semibold h-11 belleza"
             disabled={!isValid || isLoading}
             onClick={handleSubmit(onSubmit)}
           >
@@ -126,12 +142,12 @@ const LoginForm: React.FC<{
 
           {/* Switch to Sign Up */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-400 belleza">
               Don't have an account?{" "}
               <button
                 type="button"
                 onClick={onSwitchToSignUp}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-[#10B981] hover:text-[#0ea371] font-medium transition-colors"
               >
                 Sign up here
               </button>
@@ -142,4 +158,5 @@ const LoginForm: React.FC<{
     </Card>
   );
 };
+
 export default LoginForm;

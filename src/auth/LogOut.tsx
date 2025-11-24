@@ -1,23 +1,18 @@
-import { auth } from "@/firebase/Firebase";
-import type { Auth, AuthError } from "firebase/auth";
+import { supabase } from "@/supabase/Supabase";
 import type { AuthResult } from "./AuthServices";
-import { signOut as firebaseSignOut } from "firebase/auth";
 
 export const signOutUser = async (): Promise<AuthResult> => {
   try {
-    await signOut(auth);
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+
     return {
       success: true,
     };
-  } catch (error) {
-    const authError = error as AuthError;
+  } catch (error: any) {
     return {
       success: false,
-      error: authError.message,
+      error: error?.message || "An error occurred during sign out",
     };
   }
 };
-
-function signOut(auth: Auth) {
-  return firebaseSignOut(auth);
-}

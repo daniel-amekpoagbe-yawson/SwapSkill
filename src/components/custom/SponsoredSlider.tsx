@@ -32,38 +32,47 @@ export default function SponsoredSlider() {
     },
   ];
 
-  // Duplicate sponsors for seamless infinite scroll
   const duplicatedSponsors = [...sponsors, ...sponsors];
 
   return (
-    <div className="w-full  py-1">
-      <div className="max-w-7xl mx-auto px-50">
-        {/* Infinite Slider Container */}
-        <div className="relative overflow-hidden">
-          <div className="flex animate-scroll space-x-6 px-2 shadow-lg py-1">
+    <div className="relative w-full py-6 sm:py-8 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-gray-400 belleza">
+            Trusted by forward-thinking communities
+          </p>
+          <p className="text-xs text-gray-500 hidden sm:block belleza">
+            Swipe to pause
+          </p>
+        </div>
+
+        <div className="relative">
+          <div
+            className="flex gap-4 sm:gap-6 animate-scroll items-center"
+            role="list"
+          >
             {duplicatedSponsors.map((sponsor, index) => (
               <div
                 key={`${sponsor.id}-${index}`}
-                className="flex-shrink-0 group cursor-pointer"
+                role="listitem"
+                className="flex-shrink-0"
               >
-                <div className="relative  rounded-sm shadow-sm border border-gray-200/10 h-20  transition-all duration-300 ">
-                  {/* Subtle gray overlay */}
-
-                  <div className="relative z-10 flex flex-col items-center space-y-3">
-                    <img
-                      src={sponsor.logo}
-                      alt={sponsor.name}
-                      className="w-20 h-20 object-cover rounded-sm opacity-80 group-hover:opacity-100 transition-opacity"
-                    />
-                  </div>
+                <div className="w-32 sm:w-40 h-20 sm:h-24 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center backdrop-blur-xl transition-all duration-300 hover:border-[#10B981]/40 hover:shadow-lg hover:shadow-[#10B981]/10">
+                  <img
+                    src={sponsor.logo}
+                    alt={sponsor.name}
+                    className="w-16 h-16 object-cover rounded-xl opacity-80 hover:opacity-100 transition-opacity"
+                  />
                 </div>
+                <p className="mt-2 text-center text-xs text-gray-400 belleza">
+                  {sponsor.name}
+                </p>
               </div>
             ))}
           </div>
 
-          {/* Gradient overlays for fade effect */}
-          <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-gray-50/10 to-transparent z-10"></div>
-          <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-gray-100/10 to-transparent z-10"></div>
+          <div className="pointer-events-none absolute top-0 left-0 w-16 sm:w-24 h-full bg-gradient-to-r from-[#101822] to-transparent" />
+          <div className="pointer-events-none absolute top-0 right-0 w-16 sm:w-24 h-full bg-gradient-to-l from-[#101822] to-transparent" />
         </div>
       </div>
 
@@ -88,4 +97,3 @@ export default function SponsoredSlider() {
     </div>
   );
 }
-// This component creates a sponsored slider showcasing various sponsors with their logos

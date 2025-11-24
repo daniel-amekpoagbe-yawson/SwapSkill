@@ -1,127 +1,68 @@
-import { useState, useEffect } from "react";
-import { Home, ArrowLeft, Compass } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Compass, Home, Mail } from "lucide-react";
 
 const NotFound = () => {
-  const [isAnimated, setIsAnimated] = useState(false);
-
-  useEffect(() => {
-    setIsAnimated(true);
-  }, []);
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-purple-100 rounded-full opacity-15 animate-bounce"></div>
-        <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-green-100 rounded-full opacity-10 animate-pulse"></div>
-        <div className="absolute bottom-20 right-1/3 w-20 h-20 bg-yellow-100 rounded-full opacity-25 animate-bounce"></div>
+    <div className="min-h-screen w-full bg-[#101822] text-white px-4 sm:px-6 lg:px-10 py-10 sm:py-16">
+      <div className="max-w-4xl mx-auto text-center space-y-8">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative w-28 h-28 sm:w-32 sm:h-32 bg-[#10B981]/20 rounded-[2rem] flex items-center justify-center border border-[#10B981]/40">
+            <Compass className="w-10 h-10 sm:w-12 sm:h-12 text-[#10B981]" />
+            <div className="absolute inset-0 blur-3xl bg-[#10B981]/30 -z-10" />
+          </div>
+          <p className="text-sm uppercase tracking-[0.4em] text-gray-400 belleza">
+            404 error
+          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold cinzel leading-tight">
+            This page swapped locations.
+          </h1>
+          <p className="text-gray-300 text-base sm:text-lg belleza max-w-2xl">
+            The skill or story you’re searching for has moved or never existed.
+            But don’t worry — thousands of others are waiting for you back on
+            the marketplace.
+          </p>
+        </div>
 
-        {/* Decorative Lines */}
-        <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent opacity-30"></div>
-        <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-200 to-transparent opacity-30"></div>
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <button className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors group">
-            <ArrowLeft
-              size={20}
-              className="group-hover:-translate-x-1 transition-transform"
-            />
-            <span className="hidden sm:inline">Go Back</span>
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+          <button
+            onClick={() => navigate("/")}
+            className="inline-flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#0ea371] text-white font-semibold px-6 sm:px-8 py-3 rounded-2xl shadow-lg hover:shadow-[#10B981]/30 transition-transform hover:scale-[1.01]"
+          >
+            <Home className="w-4 h-4" />
+            Back to home
+          </button>
+          <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center justify-center gap-2 border border-white/20 text-white px-6 sm:px-8 py-3 rounded-2xl hover:bg-white/10 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Previous page
           </button>
         </div>
 
-        {/* Main 404 Content */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
-          {/* 404 Illustration */}
-          <div
-            className={`transition-all duration-1000 ${
-              isAnimated
-                ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            } mb-8`}
-          >
-            <div className="relative">
-              {/* Large 404 */}
-              <div className="text-8xl sm:text-9xl lg:text-[10rem] font-bold text-gray-100 leading-none select-none">
-                404
-              </div>
-
-              {/* Floating Elements */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center animate-bounce">
-                  <Compass className="text-white" size={24} />
-                </div>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute -top-4 -left-4 w-8 h-8 bg-yellow-400 rounded-full animate-pulse"></div>
-              <div className="absolute -bottom-4 -right-4 w-6 h-6 bg-green-400 rounded-full animate-pulse delay-300"></div>
-              <div className="absolute top-1/2 -left-8 w-4 h-4 bg-pink-400 rounded-full animate-pulse delay-500"></div>
-              <div className="absolute top-1/4 -right-8 w-5 h-5 bg-blue-400 rounded-full animate-pulse delay-700"></div>
-            </div>
+        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-3 text-left">
+          <h2 className="text-xl font-semibold cinzel">Need extra help?</h2>
+          <p className="text-gray-300 text-sm sm:text-base belleza">
+            If you think this page should exist, let our team know and we’ll fix
+            it faster than a weekend skill swap.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a
+              href="mailto:hello@swapskill.africa"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 px-5 py-3 rounded-2xl text-sm sm:text-base hover:bg-white/15 transition-colors"
+            >
+              <Mail className="w-4 h-4" />
+              Email support
+            </a>
+            <a
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 text-[#10B981] font-semibold px-5 py-3 rounded-2xl border border-[#10B981]/30 hover:bg-[#10B981]/10 transition-colors"
+            >
+              Contact team
+            </a>
           </div>
-
-          {/* Main Message */}
-          <div
-            className={`transition-all duration-1000 delay-300 ${
-              isAnimated
-                ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            } mb-12`}
-          >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 mb-4">
-              Page Not Found
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl leading-relaxed">
-              Sorry, we can't find the page you're looking for. It might have
-              been moved, deleted, or you entered the wrong URL.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-lg flex items-center gap-3 justify-center">
-                <Home size={20} />
-                Back to Home
-              </button>
-              <button className="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-8 rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all flex items-center gap-3 justify-center">
-                <ArrowLeft size={20} />
-                Previous Page
-              </button>
-            </div>
-          </div>
-
-          {/* Help Section */}
-          <div
-            className={`transition-all duration-1000 delay-700 ${
-              isAnimated
-                ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            } mt-12 p-6 bg-white rounded-2xl shadow-lg border border-gray-100 max-w-2xl w-full`}
-          >
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Still need help?
-            </h3>
-            <p className="text-gray-600 mb-4">
-              If you believe this is an error or you need assistance, our
-              support team is here to help.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors">
-                Contact Support
-              </button>
-              <button className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium py-2 px-4 rounded-lg transition-colors">
-                Report Issue
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center text-gray-500 mt-8 text-sm">
-          <p>© 2025 SkillExchange. All rights reserved.</p>
         </div>
       </div>
     </div>

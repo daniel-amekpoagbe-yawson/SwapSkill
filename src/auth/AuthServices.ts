@@ -1,17 +1,7 @@
-import { auth, db } from "@/firebase/Firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  type AuthError,
-  type User,
-} from "firebase/auth";
-import { setDoc, serverTimestamp, doc } from "firebase/firestore";
+import { supabase } from "@/supabase/Supabase";
+import type { User } from "@supabase/supabase-js";
 
-/**
- * Sign up a new user with email and password
- * Also creates a user document in Firestore
- */
+// ==================== TYPE DEFINITIONS ====================
 
 export interface SignUpData {
   fullName: string;
@@ -30,57 +20,64 @@ export interface AuthResult {
   error?: string;
 }
 
+// ==================== AUTH FUNCTIONS ====================
+
+/**
+ * Sign up a new user with email and password
+ * Also creates a user document in Supabase database
+ */
 export const signUpWithEmail = async (
   userData: SignUpData
 ): Promise<AuthResult> => {
   try {
-    // Create user account
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      userData.email,
-      userData.password
-    );
-
-    const user = userCredential.user;
-
-    // Update the user's display name
-    await updateProfile(user, {
-      displayName: userData.fullName,
-    });
-
-    // Create user document in Firestore
-    await setDoc(doc(db, "users", user.uid), {
-      uid: user.uid,
-      fullName: userData.fullName,
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: userData.email,
-      createdAt: serverTimestamp(),
-      lastLoginAt: serverTimestamp(),
+      password: userData.password,
+      options: {
+        data: {
+          full_name: userData.fullName,
+          display_name: userData.fullName,
+        },
+      },
     });
+
+    if (authError) throw authError;
+    if (!authData.user) {
+      throw new Error("User creation failed");
+    }
+
+    const user = authData.user;
+
+    // Create user document in Supabase database
+    const { error: dbError } = await supabase.from("users").insert({
+      uid: user.id,
+      full_name: userData.fullName,
+      email: userData.email,
+      created_at: new Date().toISOString(),
+      last_login_at: new Date().toISOString(),
+    });
+
+    if (dbError) {
+      console.error("Error creating user document:", dbError);
+    }
 
     return {
       success: true,
       user: user,
     };
-  } catch (error) {
-    const authError = error as AuthError;
+  } catch (error: any) {
     let errorMessage = "An error occurred during sign up";
 
-    // Handle specific Firebase Auth errors
-    switch (authError.code) {
-      case "auth/email-already-in-use":
+    if (error?.message) {
+      if (error.message.includes("already registered")) {
         errorMessage = "An account with this email already exists";
-        break;
-      case "auth/weak-password":
+      } else if (error.message.includes("Password")) {
         errorMessage = "Password is too weak";
-        break;
-      case "auth/invalid-email":
+      } else if (error.message.includes("email")) {
         errorMessage = "Invalid email address";
-        break;
-      case "auth/operation-not-allowed":
-        errorMessage = "Email/password accounts are not enabled";
-        break;
-      default:
-        errorMessage = authError.message;
+      } else {
+        errorMessage = error.message;
+      }
     }
 
     return {
@@ -90,13 +87,16 @@ export const signUpWithEmail = async (
   }
 };
 
-///////////////////////////////////////
+// ==================== GET CURRENT USER ====================
 
-export const getCurrentUser = (): User | null => {
-  return auth.currentUser;
+export const getCurrentUser = async (): Promise<User | null> => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
 };
-//////////////////////////////////////
-/////////////////////////////////////
+
+// ==================== SIGN IN ====================
 
 /**
  * Sign in an existing user with email and password
@@ -105,50 +105,48 @@ export const signInWithEmail = async (
   loginData: LoginData
 ): Promise<AuthResult> => {
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      loginData.email,
-      loginData.password
-    );
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email: loginData.email,
+        password: loginData.password,
+      });
 
-    const user = userCredential.user;
+    if (authError) throw authError;
+    if (!authData.user) {
+      throw new Error("Sign in failed");
+    }
 
-    // Update last login time in Firestore
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        lastLoginAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
+    const user = authData.user;
+
+    // Update last login time in Supabase database
+    const { error: dbError } = await supabase
+      .from("users")
+      .update({
+        last_login_at: new Date().toISOString(),
+      })
+      .eq("uid", user.id);
+
+    if (dbError) {
+      console.error("Error updating last login:", dbError);
+    }
 
     return {
       success: true,
       user: user,
     };
-  } catch (error) {
-    const authError = error as AuthError;
+  } catch (error: any) {
     let errorMessage = "An error occurred during sign in";
 
-    // Handle specific Firebase Auth errors
-    switch (authError.code) {
-      case "auth/user-not-found":
-        errorMessage = "No account found with this email";
-        break;
-      case "auth/wrong-password":
-        errorMessage = "Incorrect password";
-        break;
-      case "auth/invalid-email":
+    if (error?.message) {
+      if (error.message.includes("Invalid login credentials")) {
+        errorMessage = "Incorrect email or password";
+      } else if (error.message.includes("email")) {
         errorMessage = "Invalid email address";
-        break;
-      case "auth/user-disabled":
-        errorMessage = "This account has been disabled";
-        break;
-      case "auth/too-many-requests":
-        errorMessage = "Too many failed attempts. Please try again later";
-        break;
-      default:
-        errorMessage = authError.message;
+      } else if (error.message.includes("Email not confirmed")) {
+        errorMessage = "Please verify your email address";
+      } else {
+        errorMessage = error.message;
+      }
     }
 
     return {
